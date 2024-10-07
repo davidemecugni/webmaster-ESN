@@ -39,7 +39,7 @@ def generate_html_from_photos(path):
         <div style="margin-top: 2px; position: relative">
             <{tag} style="margin: 0; font-weight: 400; padding-bottom: 4px">
                 {full_name}
-                <span style="display: block; font-size: 11px; color: #aaaaaa; line-height: 1.6;">Membro attivo</span>
+                <span style="display: block; font-size: 11px; color: #aaaaaa; line-height: 1.6;">{parameters["default_role"]}</span>
             </{tag}>
         </div>
     </div>
