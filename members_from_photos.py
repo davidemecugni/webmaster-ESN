@@ -9,6 +9,8 @@ def other_formats_to_jpg(path):
     for file in os.listdir(path):
         if file.endswith('.png') or file.endswith('.jpeg'):
             img = Image.open(os.path.join(path, file))
+            if img.mode == 'RGBA':
+                img = img.convert('RGB')
             img.save(os.path.join(path, file.replace('png', 'jpg').replace('jpeg', 'jpg')))
             os.remove(os.path.join(path, file))
 
@@ -29,12 +31,13 @@ def generate_html_from_photos(path):
             # If the full name is too long, use a smaller tag
             if len(full_name) >= 19:
                 tag = "h4"
-            
+            # Lowercase the names in the filename
+            filename = file.lower()
             html_content += f"""
     <div style="display: inline-block; overflow: hidden; margin-bottom: 25px; width: 160px; text-align: center; color: #00aaf5;">
         <img
             style="border-radius: 50%;max-width: 100px; border: 2px solid rgba(0, 0, 0, 0.1);"
-            src="{parameters["url_to_members_files"]}/{file}"
+            src="{parameters["url_to_members_files"]}/{filename}"
         />
         <div style="margin-top: 2px; position: relative">
             <{tag} style="margin: 0; font-weight: 400; padding-bottom: 4px">

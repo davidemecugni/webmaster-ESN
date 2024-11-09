@@ -42,7 +42,7 @@ def equal_names(name1, name2):
         return name1 == name2
 
 def fetch_members_from_website():
-    url = parameters["website"]
+    url = parameters["website"] + 'about-us'
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
 

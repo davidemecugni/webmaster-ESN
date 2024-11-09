@@ -1,0 +1,66 @@
+<body>
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p><strong>Effective Date:</strong> 09/11/2024</p>
+
+        <h2>1. Introduction</h2>
+        <p>Welcome to the website of Erasmus Student Network Modena and Reggio Emilia (hereinafter "ESN Modena and Reggio Emilia", "we", "us", or "our"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://modena.esn.it/">https://modena.esn.it/</a> (the "Site"). We are committed to protecting your privacy and ensuring that your personal data is handled in a safe and responsible manner. This Privacy Policy complies with the General Data Protection Regulation (GDPR) (EU) 2016/679.</p>
+
+        <h2>2. Data Controller</h2>
+        <p>The data controller for the purposes of the GDPR and other applicable data protection laws is:</p>
+        <p>ESN Modena and Reggio Emilia<br>Email: <a href="mailto:board@esnmore.it">board@esnmore.it</a><br>Address: Via Ganaceto, 44, 41121 Modena MO</p>
+
+        <h2>3. Information We Collect</h2>
+        <p>We collect only the following information about visitors to our Site:</p>
+        <ul>
+            <li><strong>Visitor Count:</strong> We track the number of visitors to our Site for statistical and performance analysis.</li>
+        </ul>
+        <p>We do not collect any personal data unless it is voluntarily provided by the user, such as through contact forms or email subscriptions.</p>
+
+        <h2>4. Use of Collected Information</h2>
+        <p>The information we collect is used solely for the purpose of understanding website traffic and improving the functionality and user experience of our Site. Specifically, we use the visitor count data to:</p>
+        <ul>
+            <li>Monitor the performance of the Site.</li>
+            <li>Identify trends and usage patterns.</li>
+            <li>Enhance user experience and optimize Site content.</li>
+        </ul>
+
+        <h2>5. Consent for Use of Content</h2>
+        <p>All content, including pictures, displayed on our Site has been obtained with the explicit consent of the individuals involved. We respect the privacy of these individuals and ensure that their personal data is handled according to their consent and this Privacy Policy.</p>
+
+        <h2>6. Data Protection and Security</h2>
+        <p>We implement appropriate technical and organizational measures to protect the data we collect and store against unauthorized access, alteration, disclosure, or destruction. Our measures include:</p>
+        <ul>
+            <li>Secure storage solutions.</li>
+            <li>Regular security assessments.</li>
+            <li>Access controls and authentication protocols.</li>
+        </ul>
+
+        <h2>7. Data Retention</h2>
+        <p>We retain the visitor count data for as long as necessary to fulfill the purposes outlined in this Privacy Policy. After this period, the data is deleted or anonymized to ensure privacy.</p>
+
+        <h2>8. Sharing of Information</h2>
+        <p>We do not share, sell, rent, or trade visitor count data with third parties. The data is used exclusively by ESN Modena and Reggio Emilia for internal analysis and improvement of the Site.</p>
+
+        <h2>9. Your Data Protection Rights</h2>
+        <p>Under the GDPR, you have the following rights:</p>
+        <ul>
+            <li><strong>Right of Access:</strong> You have the right to request a copy of the personal data we hold about you.</li>
+            <li><strong>Right to Rectification:</strong> You have the right to request that we correct any inaccuracies in your personal data.</li>
+            <li><strong>Right to Erasure:</strong> You have the right to request the deletion of your personal data under certain conditions.</li>
+            <li><strong>Right to Restrict Processing:</strong> You have the right to request the restriction of processing your personal data under certain conditions.</li>
+            <li><strong>Right to Data Portability:</strong> You have the right to request the transfer of your personal data to another organization or directly to you, under certain conditions.</li>
+            <li><strong>Right to Object:</strong> You have the right to object to our processing of your personal data, under certain conditions.</li>
+        </ul>
+        <p>To exercise any of these rights, please contact us at <a href="mailto:webmaster@esnmore.it">webmaster@esnmore.it</a>.</p>
+
+        <h2>10. Changes to This Privacy Policy</h2>
+        <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We encourage you to review this Privacy Policy periodically for any updates. The effective date of the current Privacy Policy is at the top of this page.</p>
+
+        <h2>11. Contact Us</h2>
+        <p>If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:</p>
+        <p>Email: <a href="mailto:webmaster@esnmore.it">webmaster@esnmore.it</a><br>Address: Via Ganaceto, 44, 41121 Modena MO.</p>
+
+        <p>By using our Site, you acknowledge that you have read and understood this Privacy Policy.</p>
+    </div>
+</body>

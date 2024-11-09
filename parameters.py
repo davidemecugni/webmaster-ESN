@@ -1,5 +1,5 @@
 parameters = {
-    "website": "https://modena.esn.it/about-us",
+    "website": "https://modena.esn.it/",
     "year": 2024,
     "url_to_members_files": "./sites/esnmodena.it/files/members",
     "default_role": "Membro attivo"
