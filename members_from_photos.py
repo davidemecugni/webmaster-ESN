@@ -20,6 +20,7 @@ def make_image_640_640(path):
             img = Image.open(os.path.join(path, file))
             img = img.resize((640, 640))
             img.save(os.path.join(path, file))
+        os.rename(os.path.join(path, file), os.path.join(path, file.lower()))
 
 def generate_html_from_photos(path):
     html_content = ""
