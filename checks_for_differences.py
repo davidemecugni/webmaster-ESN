@@ -4,6 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import json
+import os
+from datetime import datetime, timedelta
+from termcolor import colored
 
 
 
@@ -89,6 +92,21 @@ def fetch_members_from_website():
 
 def fetch_members_from_xlsx():
     path = './members/members.xlsx'
+    # Find the most recent file in the members directory
+    members_dir = './members/'
+    files = [f for f in os.listdir(members_dir) if f.startswith('ESN ENEA Modena_complete') and f.endswith('.xlsx')]
+    files.sort(key=lambda x: os.path.getmtime(os.path.join(members_dir, x)), reverse=True)
+    path = os.path.join(members_dir, files[0])
+
+    # Calculate the file's age
+    file_mod_time = datetime.fromtimestamp(os.path.getmtime(path))
+    file_age = datetime.now() - file_mod_time
+
+    # Print the file's age in green if less than 15 days old, otherwise in red
+    if file_age < timedelta(days=15):
+        print(colored(f"The file is {file_age.days} days old.", "green"))
+    else:
+        print(colored(f"The file is {file_age.days} days old.", "red"))
     # Read the Excel file
     xls = pd.ExcelFile(path)
     
