@@ -3,6 +3,7 @@ from parameters import parameters
 
 import os
 from PIL import Image
+import pyheif
 
 
 def other_formats_to_jpg(path):
@@ -12,6 +13,18 @@ def other_formats_to_jpg(path):
             if img.mode == 'RGBA':
                 img = img.convert('RGB')
             img.save(os.path.join(path, file.replace('png', 'jpg').replace('jpeg', 'jpg')))
+        elif file.endswith('.heic'):
+            heif_file = pyheif.read(os.path.join(path, file))
+            img = Image.frombytes(
+                heif_file.mode, 
+                heif_file.size, 
+                heif_file.data,
+                "raw",
+                heif_file.mode,
+                heif_file.stride,
+            )
+            img = img.convert('RGB')
+            img.save(os.path.join(path, file.replace('heic', 'jpg')))
             os.remove(os.path.join(path, file))
 
 def make_image_640_640(path):
