@@ -7,7 +7,10 @@ import json
 import os
 from datetime import datetime, timedelta
 from termcolor import colored
+from dateutil.easter import easter
 
+def prGreen(skk): print("\033[92m {}\033[00m" .format(skk))
+def prRed(skk): print("\033[91m {}\033[00m" .format(skk))
 
 
 def convert_sets_to_lists(data):
@@ -149,9 +152,104 @@ def find_differences(members_from_website, members_from_xlsx):
                     break
             if not found:
                 differences[category].add(member)
-
     return differences
+
+def find_differences_website_not_in_xlsx(members_from_website, members_from_xlsx):
+    differences = {
+        "esners": set(),
+        "alumni": set(),
+    }
+    # Puts missing members, that are in the xlsx but not in the website, in the differences set
+    # Members from the website are considered the source of truth
+    for category in ["esners", "alumni"]:
+        for member in members_from_website[category]:
+            found = False
+            for xlsx_member in members_from_xlsx[category]:
+                if equal_names(member, xlsx_member):
+                    found = True
+                    break
+            if not found:
+                differences[category].add(member)
+    return differences
+
+# Generate message for WhatsApp
+def generate_message(differences, board):
+    festivity = nearest_festivity()
+    message = f"Siete stati visitati dal 🧙‍♂️ webmaster🧙‍♂️\n"
+    # Add welcome message in italian based on the daytime
+    hour = datetime.now().hour
+    if hour < 12:
+        message += "Buongiorno🌞! \n"
+    elif hour < 18:
+        message += "Buon pomeriggio🌞! \n"
+    else:
+        message += "Buona sera🌜! \n"
+    if festivity:
+        message += f"Buon{festivity}!\n"
+    message += "Ai nuovi membri, se desiderate essere sul sito di ESN More nella page About https://modena.esn.it/?q=about-us\n"
+    message += "Fornitemi una foto📸(possibilmente 640px640p, croppabile tipo con https://ucsc.github.io/web-tools/images/)\n"
+    message += "Il webmaster tende a croppare☐ e stretchare i malcapitati che forniscono una foto non conforme 😈\n"
+    message += "\nEcco i membri mancanti:\n"
+    for category in differences:
+        for member in differences[category]:
+            if member in board:
+                message += f"{member}board member\n"
+            else:
+                message += f"➡️ {member}\n"
+
+    message += "\nWebmaster🧙‍♂️\n"
+    message += "email: webmaster@esnmore.it\n"
+    message += "_messaggio assolutamente non autogenerato_\n"
+    return message
+
+
+def nearest_festivity():
+    today = datetime.today().date()
+    festivities = {
+        " Natale🎄": datetime(today.year, 12, 25),
+        "a Pasqua🐣": easter(today.year),
+        " Anno Nuovo🎆": datetime(today.year, 1, 1),
+        " Capodanno🎉": datetime(today.year + 1, 1, 1),
+        "a Epifania👑": datetime(today.year, 1, 6),
+        "a Festa della Liberazione🇮🇹": datetime(today.year, 4, 25),
+        "a Festa dei Lavoratori👷": datetime(today.year, 5, 1),
+        "a Festa della Repubblica🇮🇹": datetime(today.year, 6, 2),
+        "a Assunzione di Maria👼": datetime(today.year, 8, 15),
+        " Ognissanti🕯️": datetime(today.year, 11, 1),
+        "a Immacolata Concezione🙏": datetime(today.year, 12, 8),
+        " ESN Day🌍": datetime(1989, 10, 16),
+        " Halloween🎃": datetime(today.year, 10, 31),
+        " San Valentino❤️": datetime(today.year, 2, 14),
+        "a Festa della Donna🌸": datetime(today.year, 3, 8),
+        "a Festa del Papà👨": datetime(today.year, 3, 19),
+        "a Festa della Mamma👩": datetime(today.year, 5, 9),
+        "a Festa dei Nonni👴👵": datetime(today.year, 10, 2),
+        "a Festa dei Bambini👶": datetime(today.year, 11, 20),
+        "a Festa del Gatto🐱": datetime(today.year, 2, 17),
+    }
+
+    min_festivity = calculate_min_distance(today, festivities)
+    print()
+    return min_festivity
+
+def calculate_min_distance(today_date, festivities):
+    # Print type of today_date
     
+    # Ensure today_date is a date object
+    if isinstance(today_date, datetime):
+        today_date = today_date.date()
+    
+    distances = {}
+    for name, date in festivities.items():
+        # Ensure date is a date object
+        if isinstance(date, datetime):
+            date = date.date()
+        distances[name] = abs((date - today_date).days)
+    
+    nearest_festivity = min(distances, key=distances.get)
+    return nearest_festivity
+
+
 if __name__ == '__main__':
     """Compare the members from Jupiter(through excel) with the members from the website.
     .xlsx IS THE SOURCE OF TRUTH.
@@ -169,9 +267,19 @@ if __name__ == '__main__':
         print(f"{category}:")
         for member in differences[category]:
             if member in board:
-                print(f"{member} (board member)")
+                prGreen(f"{member} (board member)")
             else:
-                print(f"{member}")
+                prGreen(f"{member}")
+        print()
+
+    differences_website_not_in_xlsx = find_differences_website_not_in_xlsx(members_from_website, members_from_xlsx)
+    for category in differences_website_not_in_xlsx:
+        print(f"{category}:")
+        for member in differences_website_not_in_xlsx[category]:
+            if member in board:
+                prRed(f"{member} (board member)")
+            else:
+                prRed(f"{member}")
         print()
 
     # Save all data in json file
@@ -181,6 +289,9 @@ if __name__ == '__main__':
         json.dump(convert_sets_to_lists(members_from_website), f, indent=4)
     with open('./data/members_from_xlsx.json', 'w') as f:
         json.dump(convert_sets_to_lists(members_from_xlsx), f, indent=4)
+
+    print("WhatsApp message:")
+    print(generate_message(differences, board))
 
     
 
