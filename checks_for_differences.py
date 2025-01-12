@@ -65,7 +65,7 @@ def fetch_members_from_website():
     }
 
     for section_title, key in sections.items():
-        section = soup.find('h2', text=section_title)
+        section = soup.find('h2', string=section_title)
         if section:
             divs = section.find_next_siblings('div', style=True)
             for div in divs:
