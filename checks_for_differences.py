@@ -8,7 +8,43 @@ import os
 from datetime import datetime, timedelta
 from termcolor import colored
 from dateutil.easter import easter
+import requests
+import pandas
 
+def get_italian_joke(subtype=None):
+    """
+    Recupera una battuta dall'API Italian Jokes.
+    
+    Parametri:
+      subtype (str, opzionale): specifica il sottotipo di battuta da ottenere.
+         I sottotipi disponibili sono: All, One-liner, Observational, Stereotype, Wordplay, Long.
+         Ad esempio: subtype="One-liner"
+         
+    Restituisce:
+      Il testo della battuta, oppure un messaggio d'errore in caso di problemi.
+    """
+    base_url = "https://italian-jokes.vercel.app/api/jokes"
+    params = {}
+    if subtype:
+        params["subtype"] = subtype
+
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
+        # La risposta JSON ha il seguente formato:
+        # {
+        #    "id": 1,
+        #    "joke": "Why did the Mafia cross the road? Forget about it.",
+        #    "type": "Italian",
+        #    "subtype": "One-liner"
+        # }
+        data = response.json()
+        joke = data.get("joke", "Nessuna battuta trovata.")
+        return joke
+    except requests.RequestException as e:
+        return f"Errore durante il recupero della battuta: {e}"
+
+    
 def prGreen(skk): print("\033[92m {}\033[00m" .format(skk))
 def prRed(skk): print("\033[91m {}\033[00m" .format(skk))
 
@@ -178,14 +214,17 @@ def generate_message(differences, board):
     message = f"Siete stati visitati dal 🧙‍♂️ webmaster🧙‍♂️\n"
     # Add welcome message in italian based on the daytime
     hour = datetime.now().hour
-    if hour < 12:
+    if 8 < hour < 14:
         message += "Buongiorno🌞! \n"
-    elif hour < 18:
+    elif 14 <= hour < 18:
         message += "Buon pomeriggio🌞! \n"
-    else:
+    elif 19 <= hour < 22:
         message += "Buona sera🌜! \n"
+    else:
+        message += "Buona notte🌚! \n"
     if festivity:
         message += f"Buon{festivity}!\n"
+    message += f"Battuta dal sapore italico: {get_italian_joke('One-liner')}\n"
     message += "Ai nuovi membri, se desiderate essere sul sito di ESN More nella page About https://modena.esn.it/?q=about-us\n"
     message += "Fornitemi una foto📸(possibilmente 640px640p, croppabile tipo con https://ucsc.github.io/web-tools/images/)\n"
     message += "Il webmaster tende a croppare☐ e stretchare i malcapitati che forniscono una foto non conforme 😈\n"
@@ -193,15 +232,40 @@ def generate_message(differences, board):
     for category in differences:
         for member in differences[category]:
             if member in board:
-                message += f"{member}board member\n"
+                message += f"{member} board member\n"
             else:
                 message += f"➡️ {member}\n"
-
+    differences = differences["esners"].union(differences["alumni"])
+    # Check if missing members from log file are present
+    missing_members = get_last_log()
+    if missing_members != "No log found.":
+        good_members = [member for member in missing_members if member not in differences]
+        print(missing_members)
+        print(differences)
+        if good_members:
+            message += f"Sii un buon esner che manda le foto come {', '.join(good_members)}"
     message += "\nWebmaster🧙‍♂️\n"
     message += "email: webmaster@esnmore.it\n"
     message += "_messaggio assolutamente non autogenerato_\n"
+    # Append missing members to log
+    if differences:
+        add_missing_members_to_log_file(differences)
     return message
 
+def add_missing_members_to_log_file(differences):
+    with open('./data/log_missing.txt', 'a') as f:
+        f.write(f"{datetime.now()}: {differences}\n")
+
+def get_last_log():
+    with open('./data/log_missing.txt', 'r') as f:
+        lines = f.readlines()
+        if lines:
+            last_log = lines[-1]
+            # Convert the string representation of the set back to a list
+            last_log_set = eval(last_log.split(": ", 1)[1])
+            return list(last_log_set)
+        else:
+            return "No log found."
 
 def nearest_festivity():
     today = datetime.today().date()
@@ -217,7 +281,7 @@ def nearest_festivity():
         "a Assunzione di Maria👼": datetime(today.year, 8, 15),
         " Ognissanti🕯️": datetime(today.year, 11, 1),
         "a Immacolata Concezione🙏": datetime(today.year, 12, 8),
-        " ESN Day🌍": datetime(1989, 10, 16),
+        " ESN Day🌍": datetime(today.year, 10, 16),
         " Halloween🎃": datetime(today.year, 10, 31),
         " San Valentino❤️": datetime(today.year, 2, 14),
         "a Festa della Donna🌸": datetime(today.year, 3, 8),
@@ -226,11 +290,12 @@ def nearest_festivity():
         "a Festa dei Nonni👴👵": datetime(today.year, 10, 2),
         "a Festa dei Bambini👶": datetime(today.year, 11, 20),
         "a Festa del Gatto🐱": datetime(today.year, 2, 17),
+        "a Festa del Cane🐶": datetime(today.year, 10, 10),
     }
 
-    min_festivity = calculate_min_distance(today, festivities)
+    min_festivity, delta = calculate_min_distance(today, festivities)
     print()
-    return min_festivity
+    return min_festivity if delta < 1 else min_festivity + "(circa)"
 
 def calculate_min_distance(today_date, festivities):
     # Print type of today_date
@@ -247,7 +312,7 @@ def calculate_min_distance(today_date, festivities):
         distances[name] = abs((date - today_date).days)
     
     nearest_festivity = min(distances, key=distances.get)
-    return nearest_festivity
+    return nearest_festivity, distances[nearest_festivity]
 
 
 if __name__ == '__main__':
