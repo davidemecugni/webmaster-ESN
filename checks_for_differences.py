@@ -130,7 +130,6 @@ def fetch_members_from_website():
     return fix_names(unique_members_dict)
 
 def fetch_members_from_xlsx():
-    path = './members/members.xlsx'
     # Find the most recent file in the members directory
     members_dir = './members/'
     files = [f for f in os.listdir(members_dir) if f.startswith('ESN ENEA Modena_complete') and f.endswith('.xlsx')]
@@ -240,8 +239,6 @@ def generate_message(differences, board):
     missing_members = get_last_log()
     if missing_members != "No log found.":
         good_members = [member for member in missing_members if member not in differences]
-        print(missing_members)
-        print(differences)
         if good_members:
             message += f"Sii un buon esner che manda le foto come {', '.join(good_members)}"
     message += "\nWebmaster🧙‍♂️\n"
@@ -294,7 +291,7 @@ def nearest_festivity():
     }
 
     min_festivity, delta = calculate_min_distance(today, festivities)
-    print()
+    
     return min_festivity if delta < 1 else min_festivity + "(circa)"
 
 def calculate_min_distance(today_date, festivities):
